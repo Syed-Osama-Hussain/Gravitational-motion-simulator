@@ -5,23 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">
   <title>Solar System</title>
 </head>
+<!--linear-gradient(to bottom, #cedce7 0%,#596a72 100%)-->
 
-<body style="      background: linear-gradient(to bottom, #cedce7 0%,#596a72 100%);">
-  <section id="controls-wrapper">
-    <label>Mass of Added Planet</label>
-    <select id="masses-list">
-      <option value="0.000003003">Earth</option>
-      <option value="0.0009543">Jupiter</option>
-      <option value="1">Sun</option>
-      <option value="0.1">Red Dwarf Star</option>
-    </select>
-    <button id="reset-button">Reset</button>
-  </section>
+<body style="background:#0b0c0d ;">
+  <div class="container">
+    <section id="controls-wrapper">
+      <label style="color:aliceblue;">Mass of Added Planet</label>
+      <select  id="masses-list">
+        <option value="0.000003003">Earth</option>
+        <option value="0.0009543">Jupiter</option>
+        <option value="1">Sun</option>
+        <option value="0.1">Red Dwarf Star</option>
+      </select>
+      <button class="btn btn-primary" id="reset-button">Reset</button>
+    </section>
 
-  <canvas id="canvas"></canvas>
-
+    <canvas id="canvas"></canvas>
+  </div>
   <script src="script.js"> </script>
 </body>
 

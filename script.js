@@ -1,22 +1,24 @@
-//#ef8e38 sun
-// 	{planet: "Mercury", diameter: 0.383, color: "#A17F5D"},
-// 	{planet: "Venus", diameter: 0.949, color: "#E89624"},
-// 	{planet: "Earth", diameter: 1, color: "#518E87"},
-// 	{planet: "Mars", diameter: 0.532, color: "#964120"},
-
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 const massesList = document.querySelector("#masses-list");
 
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight)
-const scale = 70;
-const radius = 4;
+const scale = 140;
+const radius = 10;
 const trailLength = 35;
 
 const g = 39.5;
 const dt = 0.008;
 const constant = 0.15;
+
+const added = {
+  0.000003003: {  radius: 1, color: "rgb(81, 142, 135, "},
+  0.0009543:{radius:2,color:"rgb(200, 139, 58, "},
+  1:{radius:5,color:"rgb(239, 142, 56, "},
+  0.1:{radius:3,color:"rgb(255, 204, 142, "}
+}
+
 
 const masses = [{
   name: "Sun",
@@ -26,7 +28,9 @@ const masses = [{
   z: -4.86567877183925e-8,
   vx: 3.1669325898331e-5,
   vy: -6.85489559263319e-6,
-  vz: -7.90076642683254e-7
+  vz: -7.90076642683254e-7,
+  color:"rgb(239, 142, 56, ",
+  radius: 5
 },
 {
   name: "Mercury",
@@ -36,7 +40,9 @@ const masses = [{
   z: 0.00951633403684172,
   vx: 4.25144321778261,
   vy: -7.61778341043381,
-  vz: -1.01249478093275
+  vz: -1.01249478093275,
+  radius: 0.383,
+  color: "rgb(161, 127, 93, "
 },
 {
   name: "Venus",
@@ -46,7 +52,9 @@ const masses = [{
   z: 0.0192761582256879,
   vx: -7.2077847105093,
   vy: -1.76778886124455,
-  vz: 0.391700036358566
+  vz: 0.391700036358566, 
+  radius: 0.949, 
+  color: "rgb(232, 150, 36, "
 },
 {
   name: "Earth",
@@ -56,7 +64,9 @@ const masses = [{
   z: -3.22953591923124e-5,
   vx: -4.85085525059392,
   vy: 4.09601538682312,
-  vz: -0.000258553333317722
+  vz: -0.000258553333317722, 
+  radius: 1, 
+  color: "rgb(81, 142, 135, "
 },
 {
   m: 3.213e-7,
@@ -66,7 +76,9 @@ const masses = [{
   z: -0.01515164037265145,
   vx: 4.9225288800471425,
   vy: -1.5065904473191791,
-  vz: -0.1524041758922603
+  vz: -0.1524041758922603, 
+  radius: 0.532, 
+  color: "rgb(150, 65, 32, "
 }
 ];
 
@@ -98,6 +110,7 @@ canvas.addEventListener(
   false
 );
 
+
 canvas.addEventListener("mouseup", e => {
   const x = (mousePressX - width / 2) / scale;
   const y = (mousePressY - height / 2) / scale;
@@ -114,6 +127,8 @@ canvas.addEventListener("mouseup", e => {
     vx,
     vy,
     vz,
+    radius:added[massesList.value].radius,
+    color: added[massesList.value].color,
     motionTrail: new MotionTrail(ctx, trailLength, radius)
   });
   dragging = false;
@@ -204,7 +219,7 @@ class MotionTrail {
       this.positions.shift();
   }
 
-  render = (x, y) => {
+  render = (x, y,color,bodyRadius) => {
     this.storePositions(x, y);
 
     const length = this.positions.length;
@@ -226,11 +241,11 @@ class MotionTrail {
       this.ctx.arc(
         this.positions[i].x,
         this.positions[i].y,
-        circleScale * this.radius,
+        circleScale * this.radius * bodyRadius,
         0,
         2 * Math.PI
       );
-      this.ctx.fillStyle = `rgb(0, 12, 153, ${opacity})`;
+      this.ctx.fillStyle = `${color} ${opacity})`;
       this.ctx.fill();
     }
   }
@@ -281,16 +296,16 @@ const animate = () => {
     const x = width / 2 + massI.x * scale;
     const y = height / 2 + massI.y * scale;
 
-    massI.motionTrail.render(x, y);
+    massI.motionTrail.render(x, y,massI.color,massI.radius);
 
     if (massI.name) {
       ctx.font = "14px Arial";
       ctx.fillText(massI.name, x + 12, y + 4);
       ctx.fill();
     }
-    if (x < radius || x > width - radius) massI.vx = -massI.vx;
+    if (x < massI.radius || x > width - massI.radius) massI.vx = -massI.vx;
 
-    if (y < radius || y > height - radius) massI.vy = -massI.vy;
+    if (y < massI.radius || y > height - massI.radius) massI.vy = -massI.vy;
   }
 
   if (dragging) {
